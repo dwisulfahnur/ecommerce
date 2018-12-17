@@ -154,7 +154,8 @@ class EdxOrderPlacementMixinTests(BusinessIntelligenceMixin, PaymentEventsMixin,
                 tracking_context['lms_ip'],
                 self.order.number,
                 self.order.currency,
-                self.order.total_excl_tax
+                self.order.total_excl_tax,
+                self.order.total_excl_tax        # value for revenue field is same as total.
             )
             l.check(
                 (
@@ -237,7 +238,8 @@ class EdxOrderPlacementMixinTests(BusinessIntelligenceMixin, PaymentEventsMixin,
             None,
             self.order.number,
             self.order.currency,
-            self.order.total_excl_tax
+            self.order.total_excl_tax,
+            self.order.total_excl_tax            # value for revenue field is same as total.
         )
 
     def test_handle_successful_order_no_segment_key(self, mock_track):
