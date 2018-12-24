@@ -15,12 +15,12 @@ logger = logging.getLogger(__name__)
 
 class AssignmentEmail(APIView):
     """Coupon code assignment email related functions"""
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsStaffOrOwner,)
 
     def get(self, request):  # pylint: disable=unused-argument
         """
         Retrieve the default email template
-        GET /ecommerce/api/v2/assignmentemail/template
+        GET /ecommerce/api/v2/assignment-email/template
         Returns a JSON response of the following format:
         {'template': ('Your learning manager has provided you with a new access code to take a course at edX.'
                      ' You may redeem this code for {code_usage_count} courses. '
@@ -70,33 +70,33 @@ class AssignmentEmailStatus(APIView):
 
     def post(self, request):
         """
-        POST /ecommerce/api/v2/assignmentemail/updatestatus
+        POST /ecommerce/api/v2/assignment-email/status
         Requires a JSON object of the following format:
        {
-            'offer_id': '555',
+            'offer_assignment_id': '555',
             'send_id': 'XBEn85WnoQJsIhk6'
             'status': 'success'
         }
         Returns a JSON object of the following format:
        {
-            'offer_id': '555',
+            'offer_assignment_id': '555',
             'send_id': 'XBEn85WnoQJsIhk6'
             'status': 'updated'
             'error': ''
         }
         Keys:
-        *offer_id*
+        *offer_assignment_id*
             Primary key of the entry in the offer_assignment model.
         *status*
             The offer_assignment model update status
         *error*
             Error detail. Empty on a successful update.
         """
-        offer_assignment_id = int(request.data.get('offer_id'))
+        offer_assignment_id = int(request.data.get('offer_assignment_id'))
         send_id = request.data.get('send_id')
         email_status = request.data.get('status')
         update_status = {
-            'offer_id': offer_assignment_id,
+            'offer_assignment_id': offer_assignment_id,
             'send_id': send_id,
         }
         extra_status = {}
@@ -118,8 +118,11 @@ class AssignmentEmailStatus(APIView):
 
 
 class AssignmentEmailBounce(APIView):
-    """Receive Sailthru bounce-api POST"""
-    # Note: Will use a proxy api to secure this endpoint
+    """
+    Receive Sailthru bounce-api POST
+    Note: The endpoint is configured without security since Sailthru does not have any configuration options for
+    adding security tokens. Please refer to https://getstarted.sailthru.com/developers/api-basics/postbacks/
+    """
     permission_classes = ()
     authentication_classes = ()
 
@@ -132,7 +135,7 @@ class AssignmentEmailBounce(APIView):
 
     def post(self, request):
         """
-        POST /ecommerce/api/v2/assignmentemail/receivebounce
+        POST /ecommerce/api/v2/assignment-email/bounce
         Requires a JSON object of the following format:
         {
             'email': blashsdsd@dfsdf.com

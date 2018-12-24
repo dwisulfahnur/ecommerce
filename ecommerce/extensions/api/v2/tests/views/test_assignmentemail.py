@@ -17,7 +17,7 @@ from ecommerce.tests.testcases import TestCase
 @ddt.ddt
 class AssignmentEmailTests(TestCase):
     """ Tests for AssignmentEmail API view. """
-    path = reverse('api:v2:assignmentemail:get_template')
+    path = reverse('api:v2:assignment-email:get_template')
 
     def setUp(self):
         super(AssignmentEmailTests, self).setUp()
@@ -52,7 +52,7 @@ class AssignmentEmailTests(TestCase):
 @ddt.ddt
 class AssignmentEmailStatusTests(TestCase):
     """ Tests for AssignmentEmailStatus API view. """
-    path = reverse('api:v2:assignmentemail:update_status')
+    path = reverse('api:v2:assignment-email:update_status')
 
     def setUp(self):
         super(AssignmentEmailStatusTests, self).setUp()
@@ -60,7 +60,7 @@ class AssignmentEmailStatusTests(TestCase):
         self.client.login(username=self.user.username, password=self.password)
 
         self.data = {
-            'offer_id': 556,
+            'offer_assignment_id': 556,
             'send_id': 'XBEn85WnoQJsIhk8',
             'status': 'success'
         }
@@ -75,12 +75,12 @@ class AssignmentEmailStatusTests(TestCase):
         (
             # Update task exception issue
             {
-                'offer_id': 555,
+                'offer_assignment_id': 555,
                 'send_id': 'XBEn85WnoQJsIhk6',
                 'status': 'success',
             },
             {
-                'offer_id': 555,
+                'offer_assignment_id': 555,
                 'send_id': 'XBEn85WnoQJsIhk6',
                 'status': 'failed',
                 'error': 'OfferAssignment matching query does not exist.'
@@ -114,12 +114,12 @@ class AssignmentEmailStatusTests(TestCase):
         (
             # A valid request.
             {
-                'offer_id': 1,
+                'offer_assignment_id': 1,
                 'send_id': 'XBEn85WnoQJsIhk7',
                 'status': 'success',
             },
             {
-                'offer_id': 1,
+                'offer_assignment_id': 1,
                 'send_id': 'XBEn85WnoQJsIhk7',
                 'status': 'updated',
                 'error': ''
@@ -141,8 +141,8 @@ class AssignmentEmailStatusTests(TestCase):
             code='jfhrmndk554lwre',
             user_email='johndoe@unknown.com',
         )
-        post_data['offer_id'] = offer_assignment.id
-        response_data['offer_id'] = offer_assignment.id
+        post_data['offer_assignment_id'] = offer_assignment.id
+        response_data['offer_assignment_id'] = offer_assignment.id
         response = self.client.post(self.path, data=json.dumps(post_data), content_type='application/json')
         self.assertEqual(response.status_code, status_code)
         self.assertDictEqual(response_data, json.loads(response.content))
@@ -153,7 +153,7 @@ class AssignmentEmailStatusTests(TestCase):
 @ddt.ddt
 class AssignmentEmailBounceTests(TestCase):
     """ Tests for AssignmentEmailBounce API view. """
-    path = reverse('api:v2:assignmentemail:receive_bounce')
+    path = reverse('api:v2:assignment-email:receive_bounce')
 
     def setUp(self):
         super(AssignmentEmailBounceTests, self).setUp()
